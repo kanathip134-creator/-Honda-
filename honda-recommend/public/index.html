@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ระบบแนะนำรถจักรยานยนต์ Honda | คำนวณค่างวดออนไลน์</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="logo"><span class="mark">H</span> HONDA RECOMMEND</div>
+    <nav>
+      <a href="#recommend">แนะนำรถ</a>
+      <a href="#browse">รถทั้งหมด</a>
+      <a href="admin.html">สำหรับผู้ดูแลระบบ</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <h1>หารถ Honda ที่ใช่<br/>ในงบที่คุณ<span class="accent">ผ่อนไหว</span></h1>
+      <p class="lead">
+        กรอกเงินดาวน์และค่างวดที่รับได้ต่อเดือน ระบบจะประมวลผลและแนะนำรถ Honda
+        ที่เหมาะกับงบประมาณของคุณทันที พร้อมรายละเอียดยอดจัดไฟแนนซ์และค่างวดแบบเรียลไทม์
+      </p>
+    </div>
+
+    <div class="calc-card" id="quick-calc">
+      <h2>คำนวณเบื้องต้น</h2>
+      <p class="hint">*คำนวณแบบอัตราดอกเบี้ยคงที่ 15% ต่อปี เพื่อการสาธิตระบบ</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="qc-down">เงินดาวน์ (บาท)</label>
+          <input type="number" id="qc-down" value="10000" min="0" step="500" />
+        </div>
+        <div class="field">
+          <label for="qc-monthly">ผ่อนได้สูงสุด/เดือน (บาท)</label>
+          <input type="number" id="qc-monthly" value="3000" min="0" step="100" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="qc-months">ระยะเวลาผ่อน (เดือน)</label>
+          <select id="qc-months">
+            <option value="12">12 เดือน</option>
+            <option value="24">24 เดือน</option>
+            <option value="36" selected>36 เดือน</option>
+            <option value="48">48 เดือน</option>
+            <option value="60">60 เดือน</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="qc-type">ประเภทรถ (ไม่ระบุ = ทั้งหมด)</label>
+          <select id="qc-type">
+            <option value="">ทุกประเภท</option>
+            <option value="family">รถครอบครัว</option>
+            <option value="automatic">รถออโตเมติก</option>
+            <option value="sport">รถสปอร์ต</option>
+            <option value="offroad">รถวิบาก</option>
+            <option value="bigbike">บิ๊กไบค์</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-recommend">ค้นหารถที่เหมาะกับฉัน</button>
+
+      <div class="gauge-wrap">
+        <div class="gauge">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#33363f" stroke-width="10"/>
+            <circle id="gauge-arc" cx="60" cy="60" r="50" fill="none" stroke="#E4002B" stroke-width="10"
+              stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"
+              transform="rotate(-90 60 60)"/>
+          </svg>
+        </div>
+        <div class="gauge-value">
+          <span class="num" id="gauge-count">0</span>
+          <span class="label">รุ่นที่แนะนำในงบของคุณ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="recommend">
+  <div class="container">
+    <div class="section-head">
+      <h2>รถที่แนะนำสำหรับคุณ</h2>
+      <span class="sub">อิงจากงบประมาณที่กรอกด้านบน</span>
+    </div>
+    <div id="recommend-empty">กรอกงบประมาณด้านบนแล้วกดปุ่ม “ค้นหารถที่เหมาะกับฉัน” เพื่อดูคำแนะนำ</div>
+    <div class="bike-grid" id="recommend-grid"></div>
+  </div>
+</section>
+
+<section class="block" id="browse" style="background:white; border-top:1px solid #e6e2d8;">
+  <div class="container">
+    <div class="section-head">
+      <h2>รถจักรยานยนต์ทั้งหมด</h2>
+      <span class="sub">เลือกชม เปรียบเทียบ และดูรายละเอียดแต่ละรุ่น</span>
+    </div>
+
+    <div class="filter-bar">
+      <select id="f-type">
+        <option value="">ทุกประเภท</option>
+        <option value="family">รถครอบครัว</option>
+        <option value="automatic">รถออโตเมติก</option>
+        <option value="sport">รถสปอร์ต</option>
+        <option value="offroad">รถวิบาก</option>
+        <option value="bigbike">บิ๊กไบค์</option>
+      </select>
+      <select id="f-price">
+        <option value="">ทุกช่วงราคา</option>
+        <option value="0-60000">ไม่เกิน 60,000</option>
+        <option value="60000-100000">60,000 - 100,000</option>
+        <option value="100000-200000">100,000 - 200,000</option>
+        <option value="200000-999999999">200,000 ขึ้นไป</option>
+      </select>
+      <input type="text" id="f-search" placeholder="ค้นหาชื่อรุ่น เช่น PCX, Wave..." />
+    </div>
+
+    <div class="bike-grid" id="all-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    © 2026 <span class="red">Honda</span> Recommend System — โครงงานระบบแนะนำรถจักรยานยนต์พร้อมคำนวณค่างวดออนไลน์
+  </div>
+</footer>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-hero" id="modal-hero"></div>
+    <div class="modal-content">
+      <h2 id="m-name"></h2>
+      <div class="modal-price" id="m-price"></div>
+
+      <div class="spec-grid">
+        <div class="spec-item"><div class="k">ประเภทรถ</div><div class="v" id="m-type"></div></div>
+        <div class="spec-item"><div class="k">ความจุเครื่องยนต์</div><div class="v" id="m-cc"></div></div>
+        <div class="spec-item"><div class="k">ระบบเกียร์</div><div class="v" id="m-trans"></div></div>
+        <div class="spec-item"><div class="k">อัตราสิ้นเปลืองน้ำมัน</div><div class="v" id="m-fuel"></div></div>
+      </div>
+
+      <ul class="highlight-list" id="m-highlights"></ul>
+
+      <div class="modal-calc">
+        <h3>คำนวณค่างวดสำหรับรุ่นนี้</h3>
+        <div class="field-row">
+          <div class="field">
+            <label>เงินดาวน์ (บาท)</label>
+            <input type="number" id="m-down" min="0" step="500" />
+          </div>
+          <div class="field">
+            <label>ระยะเวลาผ่อน (เดือน)</label>
+            <select id="m-months">
+              <option value="12">12 เดือน</option>
+              <option value="24">24 เดือน</option>
+              <option value="36" selected>36 เดือน</option>
+              <option value="48">48 เดือน</option>
+              <option value="60">60 เดือน</option>
+            </select>
+          </div>
+        </div>
+        <div class="result-row">
+          <span>ยอดจัดไฟแนนซ์ / ค่างวดต่อเดือน</span>
+          <span class="num" id="m-result">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

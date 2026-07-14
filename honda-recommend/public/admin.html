@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ผู้ดูแลระบบ | Honda Recommend System</title>
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .admin-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 24px 60px; }
+  .admin-grid { display: grid; grid-template-columns: 380px 1fr; gap: 28px; align-items: start; }
+  .panel { background: white; border: 1px solid #e6e2d8; border-radius: 14px; padding: 22px; }
+  .panel h2 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 14px; }
+  .form-field { margin-bottom: 12px; }
+  .form-field label { display:block; font-size:0.8rem; color:var(--steel); margin-bottom:5px; }
+  .form-field input, .form-field select, .form-field textarea {
+    width:100%; padding:9px 11px; border-radius:8px; border:1px solid #d8d3c6; font-family: var(--font-body); font-size:0.9rem;
+  }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  table { width:100%; border-collapse: collapse; font-size: 0.88rem; }
+  th, td { text-align:left; padding:9px 8px; border-bottom:1px solid #eee6d8; }
+  th { color: var(--steel); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:.03em; }
+  .row-actions button { border:none; background:none; cursor:pointer; font-size:0.85rem; margin-right:8px; }
+  .row-actions .edit { color:#1d5fbf; }
+  .row-actions .delete { color:var(--red); }
+  .msg { font-size:0.85rem; padding:8px 10px; border-radius:8px; margin-bottom:10px; display:none; }
+  .msg.show { display:block; }
+  .msg.ok { background:#e5f6ea; color:#1c7d3f; }
+  .msg.err { background:#fbe6e6; color:var(--red-dark); }
+  .admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+  .btn-secondary { background: transparent; border:1.5px solid var(--asphalt); color: var(--asphalt); padding:8px 14px; border-radius:8px; font-family:var(--font-display); font-size:0.85rem; }
+</style>
+</head>
+<body style="background:#F5F3EE;">
+
+<header class="site-header">
+  <div class="container">
+    <div class="logo"><span class="mark">H</span> HONDA RECOMMEND — ADMIN</div>
+    <nav><a href="index.html">← กลับหน้าลูกค้า</a></nav>
+  </div>
+</header>
+
+<div class="admin-wrap">
+  <div class="admin-header">
+    <h1 style="font-family:var(--font-display); font-size:1.5rem;">จัดการข้อมูลรถจักรยานยนต์</h1>
+    <button class="btn-secondary" id="btn-new">+ เพิ่มรุ่นใหม่</button>
+  </div>
+
+  <div class="admin-grid">
+    <div class="panel">
+      <h2 id="form-title">เพิ่มรถรุ่นใหม่</h2>
+      <div class="msg" id="form-msg"></div>
+      <form id="bike-form">
+        <input type="hidden" id="f-id" />
+        <div class="form-field">
+          <label>ชื่อรุ่น</label>
+          <input type="text" id="f-name" required placeholder="เช่น PCX 160" />
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>ประเภทรถ</label>
+            <select id="f-type" required>
+              <option value="family">รถครอบครัว</option>
+              <option value="automatic">รถออโตเมติก</option>
+              <option value="sport">รถสปอร์ต</option>
+              <option value="offroad">รถวิบาก</option>
+              <option value="bigbike">บิ๊กไบค์</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>ราคา (บาท)</label>
+            <input type="number" id="f-price" required min="0" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>ดาวน์ขั้นต่ำ (%)</label>
+            <input type="number" id="f-minDown" value="10" min="0" max="100" />
+          </div>
+          <div class="form-field">
+            <label>ความจุเครื่องยนต์ (cc)</label>
+            <input type="number" id="f-cc" min="0" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>ระบบเกียร์</label>
+          <input type="text" id="f-trans" placeholder="เช่น อัตโนมัติ (CVT)" />
+        </div>
+        <div class="form-field">
+          <label>อัตราสิ้นเปลืองน้ำมัน</label>
+          <input type="text" id="f-fuel" placeholder="เช่น 45 กม./ลิตร" />
+        </div>
+        <div class="form-field">
+          <label>จุดเด่น (คั่นด้วยเครื่องหมาย , )</label>
+          <textarea id="f-highlights" rows="3" placeholder="ประหยัดน้ำมัน, ที่เก็บของกว้าง, ..."></textarea>
+        </div>
+        <div class="form-field">
+          <label>รูปภาพรถ</label>
+          <input type="file" id="f-image" accept="image/*" />
+          <input type="hidden" id="f-image-path" />
+        </div>
+        <div class="form-row">
+          <button type="submit" class="btn-primary" style="background:var(--asphalt);">บันทึกข้อมูล</button>
+          <button type="button" class="btn-secondary" id="btn-cancel">ยกเลิก</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>รายการรถทั้งหมด (<span id="count">0</span> รุ่น)</h2>
+      <table>
+        <thead>
+          <tr><th>ชื่อรุ่น</th><th>ประเภท</th><th>ราคา</th><th></th></tr>
+        </thead>
+        <tbody id="bike-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
